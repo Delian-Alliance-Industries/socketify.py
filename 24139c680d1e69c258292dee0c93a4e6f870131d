@@ -1,0 +1,23 @@
+src/socketify/native.py
+  52b1955b8df3405b 398-402,408
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "24139c680d1e69c258292dee0c93a4e6f870131d",
+  "prompts": {
+    "52b1955b8df3405b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "39694f2c-1c25-4fcc-befa-95167d59a31a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Pavlos-Petros Tournaris <ptournaris@delian.ai>",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 1,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    }
+  }
+}
