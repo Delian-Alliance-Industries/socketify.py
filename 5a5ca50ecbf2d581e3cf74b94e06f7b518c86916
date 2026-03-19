@@ -1,0 +1,29 @@
+.github/workflows/macos_arm64.yml
+  52b1955b8df3405b 24
+.github/workflows/macos.yml
+  52b1955b8df3405b 18
+.github/workflows/windows.yml
+  52b1955b8df3405b 34
+.github/workflows/linux.yml
+  52b1955b8df3405b 20,38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "5a5ca50ecbf2d581e3cf74b94e06f7b518c86916",
+  "prompts": {
+    "52b1955b8df3405b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "39694f2c-1c25-4fcc-befa-95167d59a31a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Pavlos-Petros Tournaris <ptournaris@delian.ai>",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 5,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    }
+  }
+}
