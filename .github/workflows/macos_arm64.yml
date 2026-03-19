@@ -21,4 +21,4 @@ jobs:
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git config --global user.name "${{ github.actor }}"
           git commit -m "[GitHub Actions] Updated darwin-arm64 binaries" || true
-          git push "https://${{ github.actor }}:${{ secrets.BUILDTOKEN }}@github.com/${{ github.repository }}.git"
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
