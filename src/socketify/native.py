@@ -395,12 +395,17 @@ void socketify_res_cork_send(int ssl, uws_res_t *res, const char *content_data, 
 )
 
 library_extension = "dll" if platform.system().lower() == "windows" else "so"
+
+_arch_info = platform.processor().lower() + " " + platform.machine().lower()
+_is_arm = "arm" in _arch_info or "aarch64" in _arch_info
+library_arch = "arm64" if _is_arm else "amd64"
+
 library_path = os.path.join(
     os.path.dirname(__file__),
     "libsocketify_%s_%s.%s"
     % (
         platform.system().lower(),
-        "arm64" if "arm" in platform.processor().lower() else "amd64",
+        library_arch,
         library_extension,
     ),
 )
