@@ -85,7 +85,7 @@ linux:
 	$(MAKE) clean
 
 	# build boringssl
-	cd ../uWebSockets/uSockets/boringssl && mkdir -p $(ARCH) && cd $(ARCH) && cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_TYPE=Release .. && make crypto ssl
+	cd ../uWebSockets/uSockets/boringssl && mkdir -p $(ARCH) && cd $(ARCH) && cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-Wno-error=stringop-overflow" .. && make crypto ssl
 
 	# build uWebSockets
 	cd ../uWebSockets/uSockets && $(CC) -I src -I boringssl/include -DUWS_WITH_PROXY -DLIBUS_USE_OPENSSL -DLIBUS_USE_LIBUV -pthread -fPIC -std=c11 -O3 -c src/*.c src/eventing/*.c src/crypto/*.c
