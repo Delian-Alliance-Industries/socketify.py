@@ -1,5 +1,7 @@
 name: Apple Silicon Build
 on: workflow_dispatch
+permissions:
+  contents: write
 jobs:
  build-macos:
     runs-on: macos-latest
