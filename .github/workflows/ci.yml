@@ -43,9 +43,9 @@ jobs:
       - name: Set Homebrew paths (macOS)
         if: runner.os == 'macOS'
         run: |
-          echo "CFLAGS=-I$(brew --prefix libuv)/include" >> "$GITHUB_ENV"
-          echo "CXXFLAGS=-I$(brew --prefix libuv)/include" >> "$GITHUB_ENV"
-          echo "LDFLAGS=-L$(brew --prefix libuv)/lib" >> "$GITHUB_ENV"
+          echo "C_INCLUDE_PATH=$(brew --prefix libuv)/include" >> "$GITHUB_ENV"
+          echo "CPLUS_INCLUDE_PATH=$(brew --prefix libuv)/include" >> "$GITHUB_ENV"
+          echo "LIBRARY_PATH=$(brew --prefix libuv)/lib" >> "$GITHUB_ENV"
 
       - name: Install build deps (Windows)
         if: runner.os == 'Windows'
