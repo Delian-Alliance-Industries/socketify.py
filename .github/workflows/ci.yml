@@ -52,9 +52,6 @@ jobs:
         run: |
           vcpkg install libuv:x64-windows-static-md
           vcpkg integrate install
-          # Debug: find where uv.h ended up
-          Get-ChildItem -Path C:\vcpkg -Recurse -Filter "uv.h" -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_.FullName }
-          Get-ChildItem -Path C:\vcpkg -Recurse -Filter "uv_a.lib" -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_.FullName }
         env:
           VCPKG_ROOT: C:\vcpkg
       - name: Set VCPKG_ROOT (Windows)

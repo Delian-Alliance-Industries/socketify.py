@@ -61,6 +61,8 @@ class build_ext(_build_ext):
         boringssl_build = os.path.join(boringssl_dir, "amd64")
 
         # Find libuv from vcpkg — search multiple known locations
+        from pathlib import Path
+
         libuv_include = None
         libuv_lib = None
         vcpkg_roots = [
@@ -68,42 +70,31 @@ class build_ext(_build_ext):
             r"C:\vcpkg",
             os.environ.get("VCPKG_INSTALLATION_ROOT", ""),
         ]
+        subdirs = [
+            Path("installed", "x64-windows-static-md"),
+            Path("packages", "libuv_x64-windows-static-md"),
+        ]
         for root in vcpkg_roots:
             if not root:
                 continue
-            for subdir in ["installed/x64-windows-static-md", "packages/libuv_x64-windows-static-md"]:
-                candidate_inc = os.path.join(root, subdir, "include", "uv.h")
-                candidate_lib = os.path.join(root, subdir, "lib", "uv_a.lib")
-                if os.path.isfile(candidate_inc):
-                    libuv_include = os.path.join(root, subdir, "include")
-                    libuv_lib = candidate_lib if os.path.isfile(candidate_lib) else libuv_lib
-                if os.path.isfile(candidate_lib) and libuv_lib is None:
-                    libuv_lib = candidate_lib
+            for subdir in subdirs:
+                base = Path(root) / subdir
+                inc = base / "include" / "uv.h"
+                lib = base / "lib" / "uv_a.lib"
+                if inc.is_file():
+                    libuv_include = str(base / "include")
+                if lib.is_file():
+                    libuv_lib = str(lib)
+                if libuv_include and libuv_lib:
+                    break
             if libuv_include and libuv_lib:
                 break
 
         if not libuv_include or not libuv_lib:
-            # Debug: list what actually exists
-            import pathlib
-            debug_info = []
-            for root in vcpkg_roots:
-                if not root:
-                    continue
-                for subdir in ["installed/x64-windows-static-md", "packages/libuv_x64-windows-static-md"]:
-                    p = pathlib.Path(root) / subdir
-                    debug_info.append(f"{p}: exists={p.exists()}")
-                    if p.exists():
-                        inc = p / "include"
-                        debug_info.append(f"  {inc}: exists={inc.exists()}")
-                        if inc.exists():
-                            debug_info.append(f"  contents: {list(inc.iterdir())[:10]}")
-                        lib = p / "lib"
-                        debug_info.append(f"  {lib}: exists={lib.exists()}")
             raise RuntimeError(
-                f"Could not find libuv headers/lib.\n"
-                f"VCPKG_ROOT={os.environ.get('VCPKG_ROOT', 'unset')}\n"
-                f"VCPKG_INSTALLATION_ROOT={os.environ.get('VCPKG_INSTALLATION_ROOT', 'unset')}\n"
-                f"Searched: {chr(10).join(debug_info)}"
+                f"Could not find libuv headers/lib. "
+                f"VCPKG_ROOT={os.environ.get('VCPKG_ROOT', 'unset')}, "
+                f"VCPKG_INSTALLATION_ROOT={os.environ.get('VCPKG_INSTALLATION_ROOT', 'unset')}"
             )
 
         # Build boringssl if not already built
