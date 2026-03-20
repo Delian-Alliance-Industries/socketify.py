@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build & Verify (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Sync dependencies
+        run: uv sync --python ${{ matrix.python-version }}
+
+      - name: Build wheel and sdist
+        run: uv build
+
+      - name: Verify wheel contents
+        run: |
+          WHEEL=$(ls dist/*.whl)
+          echo "Built wheel: $WHEEL"
+
+          # Verify native binaries are included
+          python3 -m zipfile -l "$WHEEL" | tee wheel_contents.txt
+
+          echo "--- Checking required files ---"
+          for pattern in "libsocketify_linux_amd64.so" "libsocketify_linux_arm64.so" \
+                         "libsocketify_darwin_amd64.so" "libsocketify_darwin_arm64.so" \
+                         "libsocketify_windows_amd64.dll" \
+                         "native/Makefile" "native/src/libsocketify.cpp" "native/src/libsocketify.h"; do
+            if grep -q "$pattern" wheel_contents.txt; then
+              echo "OK: $pattern"
+            else
+              echo "MISSING: $pattern"
+              exit 1
+            fi
+          done
+
+      - name: Verify sdist contents
+        run: |
+          SDIST=$(ls dist/*.tar.gz)
+          echo "Built sdist: $SDIST"
+          tar tzf "$SDIST" | tee sdist_contents.txt
+
+          for pattern in "pyproject.toml" "src/socketify/__init__.py" \
+                         "src/socketify/native/Makefile" "src/socketify/native/src/libsocketify.cpp"; do
+            if grep -q "$pattern" sdist_contents.txt; then
+              echo "OK: $pattern"
+            else
+              echo "MISSING: $pattern"
+              exit 1
+            fi
+          done
+
+      - name: Verify package metadata
+        run: |
+          uv run python -c "
+          import importlib.metadata as meta
+          m = meta.metadata('socketify')
+          assert m['Name'] == 'socketify', f'Wrong name: {m[\"Name\"]}'
+          assert m['Requires-Python'] == '>=3.9', f'Wrong python-requires: {m[\"Requires-Python\"]}'
+          assert 'cffi' in str(m.get_all('Requires-Dist')), 'Missing cffi dependency'
+          print(f'Package: {m[\"Name\"]} {m[\"Version\"]}')
+          print(f'Python requires: {m[\"Requires-Python\"]}')
+          print(f'Dependencies: {m.get_all(\"Requires-Dist\")}')
+          "
+
+  lockfile-check:
+    name: Lock file up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Check lock file is up to date
+        run: uv lock --check
