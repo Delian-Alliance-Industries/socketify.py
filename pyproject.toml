@@ -29,7 +29,6 @@ where = ["src"]
 socketify = [
     "*.so",
     "*.dll",
-    "uWebSockets/**/*",
     "native/**/*",
 ]
 
@@ -39,3 +38,26 @@ dev = [
     "build",
     "twine",
 ]
+
+[tool.cibuildwheel]
+build = ["cp39-*", "cp311-*", "cp313-*"]
+skip = ["*-win32", "*-manylinux_i686", "*-musllinux_*"]
+test-command = "python -c \"import importlib.metadata; m = importlib.metadata.metadata('socketify'); assert m['Name'] == 'socketify'\""
+
+[tool.cibuildwheel.linux]
+before-all = [
+    "apt-get update && apt-get install -y build-essential cmake git libuv1-dev zlib1g-dev golang perl || true",
+    "yum install -y cmake libuv-devel zlib-devel golang perl gcc-c++ make git || true",
+]
+archs = ["x86_64", "aarch64"]
+
+[tool.cibuildwheel.macos]
+before-all = "brew install cmake libuv"
+archs = ["x86_64", "arm64"]
+
+[tool.cibuildwheel.windows]
+before-all = [
+    "vcpkg install libuv:x64-windows-static-md",
+    "vcpkg integrate install",
+]
+archs = ["AMD64"]

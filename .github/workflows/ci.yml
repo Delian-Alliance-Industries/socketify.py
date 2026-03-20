@@ -7,14 +7,92 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    name: Build & Verify (Python ${{ matrix.python-version }})
-    runs-on: ubuntu-latest
+  build-native:
+    name: Native build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.11", "3.13"]
+        include:
+          - os: ubuntu-latest
+            expected_lib: libsocketify_linux_amd64.so
+          - os: macos-latest
+            expected_lib: libsocketify_darwin_arm64.so
+          - os: windows-latest
+            expected_lib: libsocketify_windows_amd64.dll
 
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - uses: ilammy/setup-nasm@v1
+        if: runner.os == 'Windows'
+
+      - name: Install build deps (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y build-essential cmake libuv1-dev zlib1g-dev golang perl
+
+      - name: Install build deps (macOS)
+        if: runner.os == 'macOS'
+        run: brew install cmake libuv
+
+      - name: Install build deps (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          vcpkg install libuv:x64-windows-static-md
+          vcpkg integrate install
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Build wheel (with native compilation)
+        run: uv build --wheel
+
+      - name: Verify wheel contains native library
+        shell: bash
+        run: |
+          WHEEL=$(ls dist/*.whl)
+          echo "Built wheel: $WHEEL"
+          python3 -m zipfile -l "$WHEEL" | tee wheel_contents.txt
+
+          if grep -q "${{ matrix.expected_lib }}" wheel_contents.txt; then
+            echo "OK: ${{ matrix.expected_lib }} found in wheel"
+          else
+            echo "MISSING: ${{ matrix.expected_lib }}"
+            cat wheel_contents.txt
+            exit 1
+          fi
+
+          # Verify wheel is platform-tagged (not -any.whl)
+          if echo "$WHEEL" | grep -q "\-any\.whl"; then
+            echo "ERROR: Wheel should be platform-specific, not 'any'"
+            exit 1
+          else
+            echo "OK: Wheel is platform-tagged"
+          fi
+
+      - name: Verify native source files in wheel
+        shell: bash
+        run: |
+          WHEEL=$(ls dist/*.whl)
+          python3 -m zipfile -l "$WHEEL" | tee wheel_contents.txt
+
+          for pattern in "native/Makefile" "native/src/libsocketify.cpp" "native/src/libsocketify.h"; do
+            if grep -q "$pattern" wheel_contents.txt; then
+              echo "OK: $pattern"
+            else
+              echo "MISSING: $pattern"
+              exit 1
+            fi
+          done
+
+  build-sdist:
+    name: Source distribution
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,35 +102,8 @@ jobs:
         with:
           version: "latest"
 
-      - name: Set up Python ${{ matrix.python-version }}
-        run: uv python install ${{ matrix.python-version }}
-
-      - name: Sync dependencies
-        run: uv sync --python ${{ matrix.python-version }}
-
-      - name: Build wheel and sdist
-        run: uv build
-
-      - name: Verify wheel contents
-        run: |
-          WHEEL=$(ls dist/*.whl)
-          echo "Built wheel: $WHEEL"
-
-          # Verify native binaries are included
-          python3 -m zipfile -l "$WHEEL" | tee wheel_contents.txt
-
-          echo "--- Checking required files ---"
-          for pattern in "libsocketify_linux_amd64.so" "libsocketify_linux_arm64.so" \
-                         "libsocketify_darwin_amd64.so" "libsocketify_darwin_arm64.so" \
-                         "libsocketify_windows_amd64.dll" \
-                         "native/Makefile" "native/src/libsocketify.cpp" "native/src/libsocketify.h"; do
-            if grep -q "$pattern" wheel_contents.txt; then
-              echo "OK: $pattern"
-            else
-              echo "MISSING: $pattern"
-              exit 1
-            fi
-          done
+      - name: Build sdist
+        run: uv build --sdist
 
       - name: Verify sdist contents
         run: |
@@ -60,7 +111,7 @@ jobs:
           echo "Built sdist: $SDIST"
           tar tzf "$SDIST" | tee sdist_contents.txt
 
-          for pattern in "pyproject.toml" "src/socketify/__init__.py" \
+          for pattern in "pyproject.toml" "setup.py" "src/socketify/__init__.py" \
                          "src/socketify/native/Makefile" "src/socketify/native/src/libsocketify.cpp"; do
             if grep -q "$pattern" sdist_contents.txt; then
               echo "OK: $pattern"
@@ -70,8 +121,21 @@ jobs:
             fi
           done
 
-      - name: Verify package metadata
+  metadata-check:
+    name: Package metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Sync and verify metadata
         run: |
+          uv sync
           uv run python -c "
           import importlib.metadata as meta
           m = meta.metadata('socketify')
@@ -88,8 +152,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - uses: astral-sh/setup-uv@v4
         with:
