@@ -1,0 +1,23 @@
+setup.py
+  fbc7370c62bc1c3e 63-75,102,112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "742358bd0467c75189b41d2af585b7bde0ef026a",
+  "prompts": {
+    "fbc7370c62bc1c3e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "30a2f97f-ac39-4396-bffc-c16e0abf6e68",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Pavlos-Petros Tournaris <ptournaris@delian.ai>",
+      "messages": [],
+      "total_additions": 15,
+      "total_deletions": 2,
+      "accepted_lines": 15,
+      "overriden_lines": 0
+    }
+  }
+}
