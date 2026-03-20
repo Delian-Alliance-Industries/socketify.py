@@ -91,18 +91,16 @@ class build_ext(_build_ext):
                 break
 
         if not libuv_include or not libuv_lib:
-            # Debug: direct path test
-            test_path = Path(r"C:\vcpkg\installed\x64-windows-static-md\include\uv.h")
-            test_parent = Path(r"C:\vcpkg\installed\x64-windows-static-md\include")
-            test_root = Path(r"C:\vcpkg")
+            # Debug: test each path component
+            test_inc = Path(r"C:\vcpkg\installed\x64-windows-static-md\include\uv.h")
+            test_lib = Path(r"C:\vcpkg\installed\x64-windows-static-md\lib\uv_a.lib")
+            test_lib_dir = Path(r"C:\vcpkg\installed\x64-windows-static-md\lib")
             raise RuntimeError(
-                f"Could not find libuv headers/lib. "
-                f"VCPKG_ROOT={os.environ.get('VCPKG_ROOT', 'unset')}, "
-                f"VCPKG_INSTALLATION_ROOT={os.environ.get('VCPKG_INSTALLATION_ROOT', 'unset')}, "
-                f"direct_test: {test_path}={test_path.is_file()}, "
-                f"parent_exists: {test_parent}={test_parent.is_dir()}, "
-                f"root_exists: {test_root}={test_root.is_dir()}, "
-                f"parent_contents: {list(test_parent.iterdir()) if test_parent.is_dir() else 'N/A'}"
+                f"Could not find libuv. "
+                f"inc_found={libuv_include}, lib_found={libuv_lib}, "
+                f"direct_inc={test_inc.is_file()}, direct_lib={test_lib.is_file()}, "
+                f"lib_dir_exists={test_lib_dir.is_dir()}, "
+                f"lib_dir_contents={[f.name for f in test_lib_dir.iterdir()] if test_lib_dir.is_dir() else 'N/A'}"
             )
 
         # Build boringssl if not already built
