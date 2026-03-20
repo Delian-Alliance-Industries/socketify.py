@@ -40,6 +40,12 @@ jobs:
       - name: Install build deps (macOS)
         if: runner.os == 'macOS'
         run: brew install cmake libuv go
+      - name: Set Homebrew paths (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          echo "CFLAGS=-I$(brew --prefix libuv)/include" >> "$GITHUB_ENV"
+          echo "CXXFLAGS=-I$(brew --prefix libuv)/include" >> "$GITHUB_ENV"
+          echo "LDFLAGS=-L$(brew --prefix libuv)/lib" >> "$GITHUB_ENV"
 
       - name: Install build deps (Windows)
         if: runner.os == 'Windows'
@@ -128,25 +134,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - uses: astral-sh/setup-uv@v4
         with:
           version: "latest"
 
-      - name: Sync and verify metadata
+      - name: Verify package metadata
         run: |
-          uv sync
-          uv run python -c "
-          import importlib.metadata as meta
-          m = meta.metadata('socketify')
-          assert m['Name'] == 'socketify', f'Wrong name: {m[\"Name\"]}'
-          assert m['Requires-Python'] == '>=3.9', f'Wrong python-requires: {m[\"Requires-Python\"]}'
-          assert 'cffi' in str(m.get_all('Requires-Dist')), 'Missing cffi dependency'
-          print(f'Package: {m[\"Name\"]} {m[\"Version\"]}')
-          print(f'Python requires: {m[\"Requires-Python\"]}')
-          print(f'Dependencies: {m.get_all(\"Requires-Dist\")}')
+          uv run --no-project python -c "
+          import tomllib, pathlib
+          data = tomllib.loads(pathlib.Path('pyproject.toml').read_text())
+          proj = data['project']
+          assert proj['name'] == 'socketify', f'Wrong name: {proj[\"name\"]}'
+          assert proj['requires-python'] == '>=3.9', f'Wrong requires-python: {proj[\"requires-python\"]}'
+          assert 'cffi>=1.0' in proj['dependencies'], f'Missing cffi: {proj[\"dependencies\"]}'
+          print(f'Package: {proj[\"name\"]} {proj[\"version\"]}')
+          print(f'Python requires: {proj[\"requires-python\"]}')
+          print(f'Dependencies: {proj[\"dependencies\"]}')
           "
 
   lockfile-check:
