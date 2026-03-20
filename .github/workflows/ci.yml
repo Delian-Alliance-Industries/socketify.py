@@ -28,9 +28,9 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: ilammy/msvc-dev-cmd@v2
+      - uses: ilammy/msvc-dev-cmd@v1
         if: runner.os == 'Windows'
-      - uses: ilammy/setup-nasm@v2
+      - uses: ilammy/setup-nasm@v1
         if: runner.os == 'Windows'
 
       - name: Install build deps (Linux)
