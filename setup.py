@@ -60,18 +60,32 @@ class build_ext(_build_ext):
         )
         boringssl_build = os.path.join(boringssl_dir, "amd64")
 
-        # Find vcpkg root
-        vcpkg_root = os.environ.get("VCPKG_ROOT", r"C:\vcpkg")
-        vcpkg_libuv_pkg = os.path.join(vcpkg_root, "packages", "libuv_x64-windows-static-md")
-        vcpkg_libuv_installed = os.path.join(vcpkg_root, "installed", "x64-windows-static-md")
+        # Find libuv from vcpkg — search multiple known locations
+        libuv_include = None
+        libuv_lib = None
+        vcpkg_roots = [
+            os.environ.get("VCPKG_ROOT", ""),
+            r"C:\vcpkg",
+            os.environ.get("VCPKG_INSTALLATION_ROOT", ""),
+        ]
+        for root in vcpkg_roots:
+            if not root:
+                continue
+            for subdir in ["installed/x64-windows-static-md", "packages/libuv_x64-windows-static-md"]:
+                candidate_inc = os.path.join(root, subdir, "include", "uv.h")
+                candidate_lib = os.path.join(root, subdir, "lib", "uv_a.lib")
+                if os.path.isfile(candidate_inc):
+                    libuv_include = os.path.join(root, subdir, "include")
+                    libuv_lib = candidate_lib if os.path.isfile(candidate_lib) else libuv_lib
+                if os.path.isfile(candidate_lib) and libuv_lib is None:
+                    libuv_lib = candidate_lib
+            if libuv_include and libuv_lib:
+                break
 
-        # Use packages dir if available, fall back to installed dir
-        if os.path.isdir(vcpkg_libuv_pkg):
-            libuv_include = os.path.join(vcpkg_libuv_pkg, "include")
-            libuv_lib = os.path.join(vcpkg_libuv_pkg, "lib", "uv_a.lib")
-        else:
-            libuv_include = os.path.join(vcpkg_libuv_installed, "include")
-            libuv_lib = os.path.join(vcpkg_libuv_installed, "lib", "uv_a.lib")
+        if not libuv_include or not libuv_lib:
+            raise RuntimeError(
+                f"Could not find libuv headers/lib. Searched vcpkg roots: {vcpkg_roots}"
+            )
 
         # Build boringssl if not already built
         if not os.path.isdir(boringssl_build):
