@@ -91,10 +91,18 @@ class build_ext(_build_ext):
                 break
 
         if not libuv_include or not libuv_lib:
+            # Debug: direct path test
+            test_path = Path(r"C:\vcpkg\installed\x64-windows-static-md\include\uv.h")
+            test_parent = Path(r"C:\vcpkg\installed\x64-windows-static-md\include")
+            test_root = Path(r"C:\vcpkg")
             raise RuntimeError(
                 f"Could not find libuv headers/lib. "
                 f"VCPKG_ROOT={os.environ.get('VCPKG_ROOT', 'unset')}, "
-                f"VCPKG_INSTALLATION_ROOT={os.environ.get('VCPKG_INSTALLATION_ROOT', 'unset')}"
+                f"VCPKG_INSTALLATION_ROOT={os.environ.get('VCPKG_INSTALLATION_ROOT', 'unset')}, "
+                f"direct_test: {test_path}={test_path.is_file()}, "
+                f"parent_exists: {test_parent}={test_parent.is_dir()}, "
+                f"root_exists: {test_root}={test_root.is_dir()}, "
+                f"parent_contents: {list(test_parent.iterdir()) if test_parent.is_dir() else 'N/A'}"
             )
 
         # Build boringssl if not already built
