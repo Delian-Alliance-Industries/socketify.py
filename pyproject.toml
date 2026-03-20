@@ -1,17 +1,17 @@
 [build-system]
-requires = ["cffi>=1.0","setuptools>=58.1"]
+requires = ["cffi>=1.0", "setuptools>=58.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "socketify"
 version = "0.0.31"
-dynamic = ["dependencies"]
 authors = [
-  { name="Ciro Spaciari", email="ciro.spaciari@gmail.com" },
+  { name = "Ciro Spaciari", email = "ciro.spaciari@gmail.com" },
 ]
 description = "Bringing WebSockets, Http/Https High Performance servers for PyPy3 and Python3"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
+dependencies = ["cffi>=1.0"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -21,3 +21,21 @@ classifiers = [
 [project.urls]
 "Homepage" = "https://github.com/cirospaciari/socketify.py"
 "Bug Tracker" = "https://github.com/cirospaciari/socketify.py/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+socketify = [
+    "*.so",
+    "*.dll",
+    "uWebSockets/**/*",
+    "native/**/*",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "build",
+    "twine",
+]
