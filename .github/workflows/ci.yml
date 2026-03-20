@@ -52,6 +52,11 @@ jobs:
         run: |
           vcpkg install libuv:x64-windows-static-md
           vcpkg integrate install
+        env:
+          VCPKG_ROOT: C:\vcpkg
+      - name: Set VCPKG_ROOT (Windows)
+        if: runner.os == 'Windows'
+        run: echo "VCPKG_ROOT=C:\vcpkg" >> $env:GITHUB_ENV
 
       - uses: astral-sh/setup-uv@v7.6.0
         with:
