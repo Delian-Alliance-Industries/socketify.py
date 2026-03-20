@@ -80,7 +80,10 @@ class build_ext(_build_ext):
             for subdir in subdirs:
                 base = Path(root) / subdir
                 inc = base / "include" / "uv.h"
-                lib = base / "lib" / "uv_a.lib"
+                # vcpkg names it libuv.lib (static-md) or uv_a.lib depending on triplet
+                lib = base / "lib" / "libuv.lib"
+                if not lib.is_file():
+                    lib = base / "lib" / "uv_a.lib"
                 if inc.is_file():
                     libuv_include = str(base / "include")
                 if lib.is_file():
@@ -91,16 +94,10 @@ class build_ext(_build_ext):
                 break
 
         if not libuv_include or not libuv_lib:
-            # Debug: test each path component
-            test_inc = Path(r"C:\vcpkg\installed\x64-windows-static-md\include\uv.h")
-            test_lib = Path(r"C:\vcpkg\installed\x64-windows-static-md\lib\uv_a.lib")
-            test_lib_dir = Path(r"C:\vcpkg\installed\x64-windows-static-md\lib")
             raise RuntimeError(
-                f"Could not find libuv. "
-                f"inc_found={libuv_include}, lib_found={libuv_lib}, "
-                f"direct_inc={test_inc.is_file()}, direct_lib={test_lib.is_file()}, "
-                f"lib_dir_exists={test_lib_dir.is_dir()}, "
-                f"lib_dir_contents={[f.name for f in test_lib_dir.iterdir()] if test_lib_dir.is_dir() else 'N/A'}"
+                f"Could not find libuv headers/lib. "
+                f"VCPKG_ROOT={os.environ.get('VCPKG_ROOT', 'unset')}, "
+                f"VCPKG_INSTALLATION_ROOT={os.environ.get('VCPKG_INSTALLATION_ROOT', 'unset')}"
             )
 
         # Build boringssl if not already built
