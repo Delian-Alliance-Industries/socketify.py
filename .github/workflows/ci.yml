@@ -16,6 +16,8 @@ jobs:
         include:
           - os: ubuntu-latest
             expected_lib: libsocketify_linux_amd64.so
+          - os: ubuntu-24.04-arm
+            expected_lib: libsocketify_linux_arm64.so
           - os: macos-latest
             expected_lib: libsocketify_darwin_arm64.so
           - os: windows-latest
