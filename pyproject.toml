@@ -52,7 +52,7 @@ before-all = [
 archs = ["x86_64", "aarch64"]
 
 [tool.cibuildwheel.macos]
-before-all = "brew install cmake libuv"
+before-all = "brew install cmake libuv go"
 archs = ["x86_64", "arm64"]
 
 [tool.cibuildwheel.windows]

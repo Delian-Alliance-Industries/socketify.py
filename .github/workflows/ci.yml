@@ -39,7 +39,7 @@ jobs:
 
       - name: Install build deps (macOS)
         if: runner.os == 'macOS'
-        run: brew install cmake libuv
+        run: brew install cmake libuv go
 
       - name: Install build deps (Windows)
         if: runner.os == 'Windows'
