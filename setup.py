@@ -60,6 +60,19 @@ class build_ext(_build_ext):
         )
         boringssl_build = os.path.join(boringssl_dir, "amd64")
 
+        # Find vcpkg root
+        vcpkg_root = os.environ.get("VCPKG_ROOT", r"C:\vcpkg")
+        vcpkg_libuv_pkg = os.path.join(vcpkg_root, "packages", "libuv_x64-windows-static-md")
+        vcpkg_libuv_installed = os.path.join(vcpkg_root, "installed", "x64-windows-static-md")
+
+        # Use packages dir if available, fall back to installed dir
+        if os.path.isdir(vcpkg_libuv_pkg):
+            libuv_include = os.path.join(vcpkg_libuv_pkg, "include")
+            libuv_lib = os.path.join(vcpkg_libuv_pkg, "lib", "uv_a.lib")
+        else:
+            libuv_include = os.path.join(vcpkg_libuv_installed, "include")
+            libuv_lib = os.path.join(vcpkg_libuv_installed, "lib", "uv_a.lib")
+
         # Build boringssl if not already built
         if not os.path.isdir(boringssl_build):
             os.makedirs(boringssl_build, exist_ok=True)
@@ -86,7 +99,7 @@ class build_ext(_build_ext):
             f"/I{os.path.join(socketify_dir, 'uWebSockets', 'capi')}",
             f"/I{os.path.join(socketify_dir, 'uWebSockets', 'uSockets', 'boringssl', 'include')}",
             f"/I{os.path.join(socketify_dir, 'uWebSockets', 'uSockets', 'src')}",
-            r"/IC:\vcpkg\packages\libuv_x64-windows-static-md\include",
+            f"/I{libuv_include}",
             f"/Fe{os.path.join(socketify_dir, 'libsocketify_windows_amd64.dll')}",
             os.path.join(socketify_dir, "native", "src", "libsocketify.cpp"),
             *_glob_sources(os.path.join(socketify_dir, "uWebSockets", "uSockets", "src"), "*.c"),
@@ -96,7 +109,7 @@ class build_ext(_build_ext):
             "advapi32.lib",
             os.path.join(boringssl_build, "ssl", "ssl.lib"),
             os.path.join(boringssl_build, "crypto", "crypto.lib"),
-            r"C:\vcpkg\installed\x64-windows-static-md\lib\uv_a.lib",
+            libuv_lib,
             "iphlpapi.lib", "userenv.lib", "psapi.lib",
             "user32.lib", "shell32.lib", "dbghelp.lib",
             "ole32.lib", "uuid.lib", "ws2_32.lib",
