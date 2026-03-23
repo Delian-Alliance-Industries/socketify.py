@@ -1,4 +1,4 @@
-__pycache__
+__pycache__/
 /src/socketify.egg-info
 /build
 /dist
@@ -6,4 +6,4 @@ __pycache__
 node_modules/
 yarn.lock
 .vscode
-/venv
+.venv
