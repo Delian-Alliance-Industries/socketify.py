@@ -1,0 +1,27 @@
+pyproject.toml
+  90300e5d7063a877 6-7,22-24,46
+.github/workflows/release.yml
+  90300e5d7063a877 31,36,38,41,46,50,59,63,70,84,90
+.github/workflows/ci.yml
+  90300e5d7063a877 27,31,33,61,110,114,141,143,153,165,167
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "2fca6d556e90933a57af2df50199d47acec46c15",
+  "prompts": {
+    "90300e5d7063a877": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ea919d16-dc1d-4f47-bbc1-5e951ea0d747",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Pavlos-Petros Tournaris <ptournaris@delian.ai>",
+      "messages": [],
+      "total_additions": 28,
+      "total_deletions": 27,
+      "accepted_lines": 28,
+      "overriden_lines": 0
+    }
+  }
+}
