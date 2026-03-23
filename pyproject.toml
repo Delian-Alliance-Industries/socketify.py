@@ -3,8 +3,8 @@ requires = ["cffi>=1.0", "setuptools>=58.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "socketify"
-version = "0.0.31"
+name = "delian-socketify"
+version = "0.1.0"
 authors = [
   { name = "Ciro Spaciari", email = "ciro.spaciari@gmail.com" },
 ]
@@ -19,8 +19,9 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/cirospaciari/socketify.py"
-"Bug Tracker" = "https://github.com/cirospaciari/socketify.py/issues"
+"Homepage" = "https://github.com/Delian-Alliance-Industries/socketify.py"
+"Bug Tracker" = "https://github.com/Delian-Alliance-Industries/socketify.py/issues"
+"Upstream" = "https://github.com/cirospaciari/socketify.py"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -42,7 +43,7 @@ dev = [
 [tool.cibuildwheel]
 build = ["cp39-*", "cp311-*", "cp313-*"]
 skip = ["*-win32", "*-manylinux_i686", "*-musllinux_*"]
-test-command = "python -c \"import importlib.metadata; m = importlib.metadata.metadata('socketify'); assert m['Name'] == 'socketify'\""
+test-command = "python -c \"import importlib.metadata; m = importlib.metadata.metadata('delian-socketify'); assert m['Name'] == 'delian-socketify'\""
 
 [tool.cibuildwheel.linux]
 before-all = [
