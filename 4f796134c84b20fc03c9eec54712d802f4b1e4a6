@@ -1,0 +1,62 @@
+pyproject.toml
+  b8c07fb76b6b4d53 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "4f796134c84b20fc03c9eec54712d802f4b1e4a6",
+  "prompts": {
+    "5122b83a46aa4715": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6255bdda-6e40-41b9-b427-ae4f3bbf7cdd",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pavlos-Petros Tournaris",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 2,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    },
+    "90300e5d7063a877": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ea919d16-dc1d-4f47-bbc1-5e951ea0d747",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Pavlos-Petros Tournaris <ptournaris@delian.ai>",
+      "messages": [],
+      "total_additions": 28,
+      "total_deletions": 27,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    },
+    "b8c07fb76b6b4d53": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7bf11c65-b44b-4662-be50-9230b46b492e",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pavlos-Petros Tournaris",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    },
+    "fbc7370c62bc1c3e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "30a2f97f-ac39-4396-bffc-c16e0abf6e68",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Pavlos-Petros Tournaris <ptournaris@delian.ai>",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 4,
+      "accepted_lines": 46,
+      "overriden_lines": 0
+    }
+  }
+}
