@@ -44,10 +44,14 @@ dev = [
 build = ["cp39-*", "cp311-*", "cp313-*"]
 skip = ["*-win32", "*-manylinux_i686", "*-musllinux_*"]
 test-command = "python -c \"import importlib.metadata; m = importlib.metadata.metadata('delian-socketify'); assert m['Name'] == 'delian-socketify'\""
+before-build = [
+    "python -c \"import glob, os, sys; root=os.path.join(sys.argv[1], 'src', 'socketify'); [os.remove(p) for p in glob.glob(os.path.join(root, 'libsocketify_*.so')) + glob.glob(os.path.join(root, 'libsocketify_*.dll'))]\" {project}",
+]
 
 [tool.cibuildwheel.linux]
 before-all = [
     "apt-get update && apt-get install -y build-essential cmake git libuv1-dev zlib1g-dev golang perl || true",
+    "yum install -y epel-release || true",
     "yum install -y cmake libuv-devel zlib-devel golang perl gcc-c++ make git || true",
 ]
 archs = ["x86_64", "aarch64"]
