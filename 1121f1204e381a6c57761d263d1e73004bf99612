@@ -1,0 +1,21 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "1121f1204e381a6c57761d263d1e73004bf99612",
+  "prompts": {
+    "5122b83a46aa4715": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6255bdda-6e40-41b9-b427-ae4f3bbf7cdd",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pavlos-Petros Tournaris",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 2,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    }
+  }
+}
