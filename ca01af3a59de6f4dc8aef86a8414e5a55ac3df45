@@ -1,0 +1,23 @@
+.github/workflows/release.yml
+  dc5af88719476d72 7-11,84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "ca01af3a59de6f4dc8aef86a8414e5a55ac3df45",
+  "prompts": {
+    "dc5af88719476d72": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8affebca-5a5d-4e6e-a502-b3743bc55c23",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Pavlos-Petros Tournaris",
+      "messages": [],
+      "total_additions": 26,
+      "total_deletions": 2,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    }
+  }
+}
