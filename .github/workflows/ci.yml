@@ -1,0 +1,172 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-native:
+    name: Native build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            expected_lib: libsocketify_linux_amd64.so
+          - os: ubuntu-24.04-arm
+            expected_lib: libsocketify_linux_arm64.so
+          - os: macos-latest
+            expected_lib: libsocketify_darwin_arm64.so
+          - os: windows-latest
+            expected_lib: libsocketify_windows_amd64.dll
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          submodules: recursive
+
+      - uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+        if: runner.os == 'Windows'
+      - uses: ilammy/setup-nasm@72793074d3c8cdda771dba85f6deafe00623038b # v1.5.2
+        if: runner.os == 'Windows'
+
+      - name: Install build deps (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y build-essential cmake libuv1-dev zlib1g-dev golang perl
+
+      - name: Install build deps (macOS)
+        if: runner.os == 'macOS'
+        run: brew install cmake libuv go
+      - name: Set Homebrew paths (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          echo "C_INCLUDE_PATH=$(brew --prefix libuv)/include" >> "$GITHUB_ENV"
+          echo "CPLUS_INCLUDE_PATH=$(brew --prefix libuv)/include" >> "$GITHUB_ENV"
+          echo "LIBRARY_PATH=$(brew --prefix libuv)/lib" >> "$GITHUB_ENV"
+
+      - name: Install build deps (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          vcpkg install libuv:x64-windows-static-md
+          vcpkg integrate install
+        env:
+          VCPKG_ROOT: C:\vcpkg
+      - name: Set VCPKG_ROOT (Windows)
+        if: runner.os == 'Windows'
+        run: echo "VCPKG_ROOT=C:\vcpkg" >> $env:GITHUB_ENV
+
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "latest"
+
+      - name: Build wheel (with native compilation)
+        run: uv build --wheel
+
+      - name: Verify wheel contains native library
+        shell: bash
+        run: |
+          WHEEL=$(ls dist/*.whl)
+          echo "Built wheel: $WHEEL"
+          python3 -m zipfile -l "$WHEEL" | tee wheel_contents.txt
+
+          if grep -q "${{ matrix.expected_lib }}" wheel_contents.txt; then
+            echo "OK: ${{ matrix.expected_lib }} found in wheel"
+          else
+            echo "MISSING: ${{ matrix.expected_lib }}"
+            cat wheel_contents.txt
+            exit 1
+          fi
+
+          # Verify wheel is platform-tagged (not -any.whl)
+          if echo "$WHEEL" | grep -q "\-any\.whl"; then
+            echo "ERROR: Wheel should be platform-specific, not 'any'"
+            exit 1
+          else
+            echo "OK: Wheel is platform-tagged"
+          fi
+
+      - name: Verify native source files in wheel
+        shell: bash
+        run: |
+          WHEEL=$(ls dist/*.whl)
+          python3 -m zipfile -l "$WHEEL" | tee wheel_contents.txt
+
+          for pattern in "native/Makefile" "native/src/libsocketify.cpp" "native/src/libsocketify.h"; do
+            if grep -q "$pattern" wheel_contents.txt; then
+              echo "OK: $pattern"
+            else
+              echo "MISSING: $pattern"
+              exit 1
+            fi
+          done
+
+  build-sdist:
+    name: Source distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          submodules: recursive
+
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "latest"
+
+      - name: Build sdist
+        run: uv build --sdist
+
+      - name: Verify sdist contents
+        run: |
+          SDIST=$(ls dist/*.tar.gz)
+          echo "Built sdist: $SDIST"
+          tar tzf "$SDIST" | tee sdist_contents.txt
+
+          for pattern in "pyproject.toml" "setup.py" "src/socketify/__init__.py" \
+                         "src/socketify/native/Makefile" "src/socketify/native/src/libsocketify.cpp"; do
+            if grep -q "$pattern" sdist_contents.txt; then
+              echo "OK: $pattern"
+            else
+              echo "MISSING: $pattern"
+              exit 1
+            fi
+          done
+
+  metadata-check:
+    name: Package metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "latest"
+
+      - name: Verify package metadata
+        run: |
+          uv run --no-project python -c "
+          import tomllib, pathlib
+          data = tomllib.loads(pathlib.Path('pyproject.toml').read_text())
+          proj = data['project']
+          assert proj['name'] == 'delian-socketify', f'Wrong name: {proj[\"name\"]}'
+          assert proj['requires-python'] == '>=3.9', f'Wrong requires-python: {proj[\"requires-python\"]}'
+          assert 'cffi>=1.0' in proj['dependencies'], f'Missing cffi: {proj[\"dependencies\"]}'
+          print(f'Package: {proj[\"name\"]} {proj[\"version\"]}')
+          print(f'Python requires: {proj[\"requires-python\"]}')
+          print(f'Dependencies: {proj[\"dependencies\"]}')
+          "
+
+  lockfile-check:
+    name: Lock file up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "latest"
+
+      - name: Check lock file is up to date
+        run: uv lock --check

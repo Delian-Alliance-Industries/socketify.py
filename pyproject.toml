@@ -1,17 +1,17 @@
 [build-system]
-requires = ["cffi>=1.0","setuptools>=58.1"]
+requires = ["cffi>=1.0", "setuptools>=58.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "socketify"
-version = "0.0.31"
-dynamic = ["dependencies"]
+name = "delian-socketify"
+version = "0.1.0"
 authors = [
-  { name="Ciro Spaciari", email="ciro.spaciari@gmail.com" },
+  { name = "Ciro Spaciari", email = "ciro.spaciari@gmail.com" },
 ]
 description = "Bringing WebSockets, Http/Https High Performance servers for PyPy3 and Python3"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
+dependencies = ["cffi>=1.0"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -19,5 +19,51 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/cirospaciari/socketify.py"
-"Bug Tracker" = "https://github.com/cirospaciari/socketify.py/issues"
+"Homepage" = "https://github.com/Delian-Alliance-Industries/socketify.py"
+"Bug Tracker" = "https://github.com/Delian-Alliance-Industries/socketify.py/issues"
+"Upstream" = "https://github.com/cirospaciari/socketify.py"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+socketify = [
+    "*.so",
+    "*.dll",
+    "native/**/*",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "build",
+    "twine",
+]
+
+[tool.cibuildwheel]
+build = ["cp39-*", "cp311-*", "cp313-*"]
+skip = ["*-win32", "*-manylinux_i686", "*-musllinux_*"]
+test-command = "python -c \"import importlib.metadata; m = importlib.metadata.metadata('delian-socketify'); assert m['Name'] == 'delian-socketify'\""
+
+[tool.cibuildwheel.linux]
+before-all = [
+    "apt-get update && apt-get install -y build-essential cmake git libuv1-dev zlib1g-dev golang perl || true",
+    "yum install -y cmake libuv-devel zlib-devel golang perl gcc-c++ make git || true",
+]
+archs = ["x86_64", "aarch64"]
+
+[tool.cibuildwheel.macos]
+before-all = "brew install cmake libuv go"
+archs = ["x86_64", "arm64"]
+
+[tool.cibuildwheel.macos.environment]
+C_INCLUDE_PATH = "/opt/homebrew/include:/usr/local/include"
+CPLUS_INCLUDE_PATH = "/opt/homebrew/include:/usr/local/include"
+LIBRARY_PATH = "/opt/homebrew/lib:/usr/local/lib"
+
+[tool.cibuildwheel.windows]
+before-all = [
+    "vcpkg install libuv:x64-windows-static-md",
+    "vcpkg integrate install",
+]
+archs = ["AMD64"]
