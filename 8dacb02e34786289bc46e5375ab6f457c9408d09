@@ -1,0 +1,57 @@
+README.md
+  b8c07fb76b6b4d53 1,4,7,11,13,15,19-20,38,77,86,88,90,96,100,102,162-163,179,185,195,198,200,202,206,210
+bench/django-asgi/requirements.txt
+  b8c07fb76b6b4d53 2
+examples/docker/pypy3/requirements.txt
+  b8c07fb76b6b4d53 1
+docs/examples.md
+  b8c07fb76b6b4d53 3,7-10,14,18-22,26-30,34-36,40-42,46-48,52-55,59-61,65-66,70-71,75-77,81
+docs/README.md
+  b8c07fb76b6b4d53 1,5,8-11,13,16,18,20,28
+examples/chat/index.py
+  b8c07fb76b6b4d53 9-10
+pyproject.toml
+  b8c07fb76b6b4d53 11-13
+CONTRIBUTING.md
+  b8c07fb76b6b4d53 1,3,7,10-11
+docs/getting-started.md
+  b8c07fb76b6b4d53 72
+docs/graphiql.md
+  b8c07fb76b6b4d53 2
+examples/docker/python3/requirements.txt
+  b8c07fb76b6b4d53 1
+docs/installation.md
+  b8c07fb76b6b4d53 5,7,9,14,17,19-25,42
+examples/docker/python3-arch/requirements.txt
+  b8c07fb76b6b4d53 1
+SECURITY.md
+  b8c07fb76b6b4d53 14
+src/socketify/native/Make.bat
+  b8c07fb76b6b4d53 6
+bench/django-wsgi/requirements.txt
+  b8c07fb76b6b4d53 2
+examples/requirements.txt
+  b8c07fb76b6b4d53 8
+examples/docker/python3-alpine/Dockerfile
+  b8c07fb76b6b4d53 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "8dacb02e34786289bc46e5375ab6f457c9408d09",
+  "prompts": {
+    "b8c07fb76b6b4d53": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7bf11c65-b44b-4662-be50-9230b46b492e",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Pavlos-Petros Tournaris",
+      "messages": [],
+      "total_additions": 113,
+      "total_deletions": 234,
+      "accepted_lines": 112,
+      "overriden_lines": 0
+    }
+  }
+}
