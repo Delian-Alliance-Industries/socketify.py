@@ -1,25 +1,22 @@
-# socketify.py
+# socketify.py (delian-socketify)
 
 <p align="center">
-  <a href="https://github.com/cirospaciari/socketify.py"><img src="https://raw.githubusercontent.com/cirospaciari/socketify.py/main/misc/logo.png" alt="Logo" height=170></a>
+  <a href="https://github.com/Delian-Alliance-Industries/socketify.py"><img src="https://raw.githubusercontent.com/cirospaciari/socketify.py/main/misc/logo.png" alt="Logo" height=170></a>
   <br />
   <br />
-<a href='https://github.com/cirospaciari/socketify.py'><img alt='GitHub Clones' src='https://img.shields.io/badge/dynamic/json?color=success&label=Clones&query=count&url=https://gist.githubusercontent.com/cirospaciari/2243d59951f4abe4fd2000f1e20bc561/raw/clone.json&logo=github'></a>
-<a href='https://pypi.org/project/socketify/' target="_blank"><img alt='PyPI Downloads' src='https://static.pepy.tech/personalized-badge/socketify?period=total&units=international_system&left_color=grey&right_color=brightgreen&left_text=Downloads'></a>
-<a href="https://github.com/sponsors/cirospaciari/" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=https://github.com/sponsors/cirospaciari"/></a>
-<a href='https://discord.socketify.dev/' target="_blank"><img alt='Discord' src='https://img.shields.io/discord/1042529276219641906?label=Discord'></a>
+<a href='https://pypi.org/project/delian-socketify/' target="_blank"><img alt='PyPI' src='https://img.shields.io/pypi/v/delian-socketify.svg'></a>
 </p>
 
 <div align="center">
-  <a href="https://docs.socketify.dev">Documentation</a>
+  <a href="https://github.com/Delian-Alliance-Industries/socketify.py">Github</a>
   <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://discord.socketify.dev/">Discord</a>
+  <a href="https://github.com/Delian-Alliance-Industries/socketify.py/issues">Issues</a>
   <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://github.com/cirospaciari/socketify.py/issues">Issues</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://github.com/cirospaciari/socketify.py/tree/main/examples">Examples</a>
+  <a href="https://github.com/Delian-Alliance-Industries/socketify.py/tree/main/examples">Examples</a>
   <br />
 </div>
+
+> This is a maintained fork of [`cirospaciari/socketify.py`](https://github.com/cirospaciari/socketify.py) published to PyPI as [`delian-socketify`](https://pypi.org/project/delian-socketify/). The Python import name remains `socketify`, so existing code keeps working unchanged. All credit for the original work goes to Ciro Spaciari and contributors; this fork only packages and maintains it under a new distribution name.
 
 ## 💡 Features
 
@@ -38,7 +35,7 @@
 - Automatic Ping / Pong Support
 - Per Socket Data
 - [`Middlewares`](https://docs.socketify.dev/middlewares.html)
-- [`Templates`](https://docs.socketify.dev/templates.html) Support (examples with [`Mako`](https://github.com/cirospaciari/socketify.py/tree/main/examples/template_mako.py) and [`Jinja2`](https://github.com/cirospaciari/socketify.py/tree/main/examples/template_jinja2.py))
+- [`Templates`](https://docs.socketify.dev/templates.html) Support (examples with [`Mako`](https://github.com/Delian-Alliance-Industries/socketify.py/tree/main/examples/template_mako.py) and [`Jinja2`](https://github.com/Delian-Alliance-Industries/socketify.py/tree/main/examples/template_jinja2.py))
 - [`ASGI Server`](https://docs.socketify.dev/cli.html)
 - [`WSGI Server`](https://docs.socketify.dev/cli.html)
 - [`Plugins/Extensions`](https://docs.socketify.dev/extensions.html)
@@ -56,8 +53,6 @@
 - Hot Reloading
 
 We created and adapted the full C API from [uNetworking/uWebSockets](https://github.com/uNetworking/uWebSockets) and will integrate libuv powered fetch and file IO, this same C API is used by [Bun](https://bun.sh/)
-
-Join Github [`Discussions`](https://github.com/cirospaciari/socketify.py/discussions) or [`Discord`](https://discord.socketify.dev/) for help and have a look at the development progress.
 
 ## :zap: Benchmarks
 
@@ -79,7 +74,7 @@ WebSocket messages per second (Linux x64)
 
 Http tested with TFB tool plaintext benchmark<br/>
 WebSocket tested with [Bun.sh](https://bun.sh) bench chat-client <br/>
-Source code in [TechEmPower](https://github.com/TechEmpower/FrameworkBenchmarks) and for websockets in [bench](https://github.com/cirospaciari/socketify.py/tree/main/bench)<br/>
+Source code in [TechEmPower](https://github.com/TechEmpower/FrameworkBenchmarks) and for websockets in [bench](https://github.com/Delian-Alliance-Industries/socketify.py/tree/main/bench)<br/>
 
 Machine OS: Debian GNU/Linux bookworm/sid x86_64 Kernel: 6.0.0-2-amd64 CPU: Intel i7-7700HQ (8) @ 3.800GHz Memory: 32066MiB
 
@@ -88,23 +83,23 @@ Machine OS: Debian GNU/Linux bookworm/sid x86_64 Kernel: 6.0.0-2-amd64 CPU: Inte
 For macOS x64 & Silicon, Linux x64, Windows
 
 ```bash
-pip install socketify
+pip install delian-socketify
 #or specify PyPy3
-pypy3 -m pip install socketify
+pypy3 -m pip install delian-socketify
 #or in editable mode
-pypy3 -m pip install -e socketify
+pypy3 -m pip install -e .
 ```
 
 Using install via requirements.txt
 
 ```text
-socketify
+delian-socketify
 ```
 
 ```bash
-pip install -r ./requirements.txt 
+pip install -r ./requirements.txt
 #or specify PyPy3
-pypy3 -m pip install -r ./requirements.txt 
+pypy3 -m pip install -r ./requirements.txt
 ```
 
 If you are using linux or macOS, you may need to install libuv and zlib in your system
@@ -164,8 +159,8 @@ def ws_open(ws):
 def ws_message(ws, message, opcode):
     #Ok is false if backpressure was built up, wait for drain
     ok = ws.send(message, opcode)
-    
-app = App()    
+
+app = App()
 app.ws("/*", {
     'compression': CompressOptions.SHARED_COMPRESSOR,
     'max_payload_length': 16 * 1024 * 1024,
@@ -181,13 +176,13 @@ app.listen(3000, lambda config: print("Listening on port http://localhost:%d now
 app.run()
 ```
 
-We have more than 20 examples [click here](https://github.com/cirospaciari/socketify.py/tree/main/examples) for more
+We have more than 20 examples [click here](https://github.com/Delian-Alliance-Industries/socketify.py/tree/main/examples) for more
 
 ## :hammer: Building from source
 
 ```bash
 #clone and update submodules
-git clone https://github.com/cirospaciari/socketify.py.git
+git clone https://github.com/Delian-Alliance-Industries/socketify.py.git
 cd ./socketify.py
 git submodule update --init --recursive --remote
 #you can use make linux, make macos or call Make.bat from Visual Studio Development Prompt to build
@@ -197,37 +192,19 @@ pypy3 -m pip install .
 #install in editable mode
 pypy3 -m pip install -e .
 #if you want to remove
-pypy3 -m pip uninstall socketify
+pypy3 -m pip uninstall delian-socketify
 ```
 
-## :briefcase: Commercially supported
+## :page_facing_up: Attribution
 
-I'm a Brazilian consulting & contracting company dealing with anything related with [socketify.py](https://github.com/cirospaciari/socketify.py) and [socketify.rb](https://github.com/cirospaciari/socketify.rb)
+Original project: [cirospaciari/socketify.py](https://github.com/cirospaciari/socketify.py) by Ciro Spaciari. Licensed under the MIT License (see [LICENSE](./LICENSE)).
 
-Don't hesitate sending a mail if you are in need of advice, support, or having other business inquiries in mind. We'll figure out what's best for both parties.
-
-Special thank's to [uNetworking AB](https://github.com/uNetworking) to develop [uWebSockets](https://github.com/uNetworking/uWebSockets), [uSockets](https://github.com/uNetworking/uSockets) and allow us to bring this features and performance to Python and PyPy
-
-## :heart: Sponsors
-
-If you like to see this project thrive, you can sponsor us on GitHub too. We need all the help we can get.
-
-Thank you [`Otavio Augusto`](https://github.com/middlebaws) to be the first sponsor of this project!
-
-<a href="https://github.com/sponsors/cirospaciari/" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=https://github.com/sponsors/cirospaciari"/></a>
-
-## :star: Stargazers
-
-[![Stargazers repo roster for @cirospaciari/socketify.py](https://reporoster.com/stars/dark/cirospaciari/socketify.py)](https://github.com/cirospaciari/socketify.py/stargazers)
-
-## :wrench: Forkers
-
-[![Forkers repo roster for @cirospaciari/socketify.py](https://reporoster.com/forks/dark/cirospaciari/socketify.py)](https://github.com/cirospaciari/socketify.py/network/members)
+Special thanks to [uNetworking AB](https://github.com/uNetworking) for [uWebSockets](https://github.com/uNetworking/uWebSockets) and [uSockets](https://github.com/uNetworking/uSockets), which power this library.
 
 ## :grey_question: uvloop
 
-We don't use uvloop, because uvloop don't support Windows and PyPy3 at this moment, this can change in the future, but right now we want to implement our own libuv + asyncio solution, and a lot more.
+We don't use uvloop, because uvloop doesn't support Windows and PyPy3 at this moment; this may change in the future, but right now we want to implement our own libuv + asyncio solution, and a lot more.
 
 ## :dizzy: CFFI vs Cython vs HPy
 
-Cython performs really well on Python3 but really bad on PyPy3, CFFI are chosen for better support PyPy3 until we got our hands on a stable [`HPy`](https://hpyproject.org/) integration.
+Cython performs really well on Python3 but really bad on PyPy3. CFFI was chosen for better PyPy3 support until we get our hands on a stable [`HPy`](https://hpyproject.org/) integration.

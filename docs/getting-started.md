@@ -69,6 +69,6 @@ if __name__ == "__main__":
 > We can have multiple routes for WebSockets, but in this example we just get one for anything we need, adding an option of compression using SHARED_COMPRESSOR, max_payload_length of 1mb and an idle timeout of 12s just to show some most commonly used features you can see all these options in the [API Reference](api.md)
 
 
-If you just wanna to see some more examples you can go to our [examples folder](https://github.com/cirospaciari/socketify.py/tree/main/examples) for more than 25 quick examples.
+If you just wanna to see some more examples you can go to our [examples folder](https://github.com/Delian-Alliance-Industries/socketify.py/tree/main/examples) for more than 25 quick examples.
 
 ### Next [Corking Concept](corking.md)

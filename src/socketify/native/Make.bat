@@ -3,7 +3,7 @@ $ErrorActionPreference = 'SilentlyContinue'
 $Env:CC='clang'
 $Env:CXX='clang++'
 
-git clone --recursive https://github.com/cirospaciari/socketify.py.git
+git clone --recursive https://github.com/Delian-Alliance-Industries/socketify.py.git
 cd socketify.py\src\socketify\native
 vcpkg install libuv:x64-windows-static-md
 vcpkg integrate install

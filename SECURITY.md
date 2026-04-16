@@ -11,4 +11,4 @@ If you find something in these versions or higher please report to us.
 
 ## Reporting a Vulnerability
 
-If you need to report any vulnerability please send a e-mail to ciro.spaciari@gmail.com or even an direct message to @cirospaciari on Twitter
+If you need to report any vulnerability please send an e-mail to ptournaris@delian.ai

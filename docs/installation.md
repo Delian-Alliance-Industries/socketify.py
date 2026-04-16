@@ -2,21 +2,27 @@
 For macOS x64 & Silicon, Linux x64, Windows
 
 ```bash
-pip install socketify
+pip install delian-socketify
 #or specify PyPy3
-pypy3 -m pip install socketify
+pypy3 -m pip install delian-socketify
 #or in editable mode
-pypy3 -m pip install -e socketify
+pypy3 -m pip install -e .
 ```
 
 Using install via requirements.txt
 ```text
-socketify
+delian-socketify
 ```
 ```bash
-pip install -r ./requirements.txt 
+pip install -r ./requirements.txt
 #or specify PyPy3
-pypy3 -m pip install -r ./requirements.txt 
+pypy3 -m pip install -r ./requirements.txt
+```
+
+The Python import name remains `socketify`:
+
+```python
+from socketify import App
 ```
 
 If you are using linux or macOS, you may need to install libuv and zlib in your system

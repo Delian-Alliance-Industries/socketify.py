@@ -6,8 +6,8 @@ from datetime import datetime, timedelta
 app = App()
 def get_welcome_message(room):
     return {
-    "username": "@cirospaciari/socketify.py",
-    "html_url": "https://www.github.com/cirospaciari/socketify.py",
+    "username": "@Delian-Alliance-Industries/socketify.py",
+    "html_url": "https://www.github.com/Delian-Alliance-Industries/socketify.py",
     "avatar_url": "https://raw.githubusercontent.com/cirospaciari/socketify.py/main/misc/big_logo.png",
     "datetime": "",
     "name": "socketify.py",

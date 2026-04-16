@@ -8,6 +8,9 @@ version = "0.1.0"
 authors = [
   { name = "Ciro Spaciari", email = "ciro.spaciari@gmail.com" },
 ]
+maintainers = [
+  { name = "Pavlos-Petros Tournaris", email = "ptournaris@delian.ai" },
+]
 description = "Bringing WebSockets, Http/Https High Performance servers for PyPy3 and Python3"
 readme = "README.md"
 requires-python = ">=3.9"
