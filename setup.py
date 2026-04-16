@@ -7,6 +7,7 @@ a custom build_ext command that compiles libsocketify via the native Makefile.
 
 import os
 import platform
+import shutil
 import subprocess
 import sys
 
@@ -48,6 +49,15 @@ class build_ext(_build_ext):
             env = os.environ.copy()
             env.update(env_overrides)
             subprocess.check_call(["make", target], cwd=NATIVE_DIR, env=env)
+
+        self._copy_built_libs_to_build_lib()
+
+    def _copy_built_libs_to_build_lib(self):
+        dest = os.path.join(self.build_lib, "socketify")
+        os.makedirs(dest, exist_ok=True)
+        for fname in os.listdir(OUTPUT_DIR):
+            if fname.startswith("libsocketify_") and fname.endswith((".so", ".dll")):
+                shutil.copy2(os.path.join(OUTPUT_DIR, fname), os.path.join(dest, fname))
 
     def _build_windows(self):
         """Windows build using cl.exe directly (mirrors windows.yml workflow)."""
